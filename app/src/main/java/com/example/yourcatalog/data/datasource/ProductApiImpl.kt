@@ -12,17 +12,35 @@ class ProductApiImpl(
     private val client: HttpClient
 ) : ProductApi {
 
-    override suspend fun getAll(queryOptions: QueryOptions): ProductsResponse {
-        return (client.takeIf { !queryOptions.query.isNullOrEmpty() }?.get("search") {
-            queryOptions.query?.takeIf { it.isNotEmpty() }?.let { query ->
-                parameter("q", query)
+    override suspend fun getAll(queryOptions: QueryOptions): Result<ProductsResponse> {
+        return runCatching<ProductApiImpl, ProductsResponse> {
+            (client.takeIf { !queryOptions.query.isNullOrEmpty() }?.get("search") {
+                queryOptions.query?.takeIf { it.isNotEmpty() }?.let { query ->
+                    parameter("q", query)
+                }
+                parameter("limit", queryOptions.limit)
+                parameter("skip", queryOptions.skip)
+            } ?: client.get {}).body()
+        }.fold(
+            onSuccess = {
+                Result.success(it)
+            },
+            onFailure = {
+                Result.failure(it)
             }
-            parameter("limit", queryOptions.limit)
-            parameter("skip", queryOptions.skip)
-        } ?: client.get {}).body()
+        )
     }
 
-    override suspend fun getWithId(id: String): Product? {
-        return client.get(id).body()
+    override suspend fun getWithId(id: String): Result<Product> {
+        return runCatching<ProductApiImpl, Product> {
+            client.get(id).body()
+        }.fold(
+            onSuccess = {
+                Result.success(it)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
     }
 }

@@ -19,6 +19,6 @@ object Module {
         single<ProductApi> { ProductApiImpl(get()) }
         single<ProductRepository> { ProductRepositoryImpl(get()) }
         single<ProductService> { ProductServiceImpl(get()) }
-        viewModel { ProductsViewModel() }
+        viewModel { ProductsViewModel(get()) }
     }
 }

@@ -5,6 +5,6 @@ import com.example.yourcatalog.data.model.ProductsResponse
 import com.example.yourcatalog.data.model.QueryOptions
 
 interface ProductApi {
-    suspend fun getAll(queryOptions: QueryOptions): ProductsResponse
-    suspend fun getWithId(id: String): Product?
+    suspend fun getAll(queryOptions: QueryOptions): Result<ProductsResponse>
+    suspend fun getWithId(id: String): Result<Product>
 }
