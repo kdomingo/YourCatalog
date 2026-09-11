@@ -18,8 +18,7 @@ internal val httpClient = HttpClient {
     defaultRequest {
         url {
             protocol = URLProtocol.HTTPS
-            host = "dummyjson.com"
-            path("products")
+            host = "dummyjson.com/products"
         }
     }
 }
